@@ -2,4 +2,18 @@
 - name: Install extra ubuntu packages
   action: apt name={{ item }} state=installed
   with_items:
-    - emacs24-nox
+    - "{{ 'emacs24-nox' if ansible_distribution_version > '12.04' else 'emacs23-nox' }}"
+    - python-virtualenv
+
+- name: Symlink dotfiles dir into homedir.
+  action: file src=/vagrant/Dotfiles dest=/home/vagrant/Dotfiles state=link
+
+- name: Symlink tools dir into homedir.
+  action: file src=/vagrant/tools dest=~/tools state=link
+
+- name: Install dotfiles program in a virtualenv
+  action: pip name=dotfiles virtualenv=/tmp/tempvirtualenv
+
+- name: Install dotfiles.
+  action: shell /tmp/tempvirtualenv/bin/dotfiles --sync --force
+  sudo: false
