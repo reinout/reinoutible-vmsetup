@@ -42,7 +42,7 @@
   sudo: false
 
 - name: Run tools/ dir's buildout.
-  action: shell python bootstrap.py && bin/buildout -vv && install_shell_scripts.sh
+  action: shell python bootstrap.py && bin/buildout && ./install_shell_scripts.sh
   sudo: false
   args:
     chdir: /home/vagrant/tools
