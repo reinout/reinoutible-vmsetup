@@ -13,7 +13,7 @@ customization. That's what the ansible role here does!
 
 - Installing some extra packages such as emacs.
 
-- Installing dotfiles (from my custom privagte Dotfiles collection).
+- Installing dotfiles (from my custom private Dotfiles collection).
 
 - Installing some python tools and shell scripts (from
   https://github.com/reinout/tools).
