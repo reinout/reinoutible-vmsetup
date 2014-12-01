@@ -5,11 +5,10 @@
     - "{{ 'emacs24-nox' if ansible_distribution_version > '12.04' else 'emacs23-nox' }}"
     - python-virtualenv
 
+# Make sure dotfiles are installed.
 - name: Symlink dotfiles dir into homedir.
   action: file src=/vagrant/Dotfiles dest=/home/vagrant/Dotfiles state=link
-
-- name: Symlink tools dir into homedir.
-  action: file src=/vagrant/tools dest=~/tools state=link
+  sudo: false
 
 - name: Install dotfiles program in a virtualenv
   action: pip name=dotfiles virtualenv=/tmp/tempvirtualenv
@@ -17,3 +16,33 @@
 - name: Install dotfiles.
   action: shell /tmp/tempvirtualenv/bin/dotfiles --sync --force
   sudo: false
+
+
+# Make sure the tools are installed.
+- name: Create /Users dir for a /Users/reinout symlink.
+  action: file dest=/Users state=directory
+
+- name: Add a symlink that mimicks /Users/reinout. Handy for some configuration files.
+  action: file src=/home/vagrant dest=/Users/reinout state=link
+
+- name: Make sure the buildout cache dirs exist.
+  action: file dest=/home/vagrant/.buildout/{{ item }} state=directory
+  sudo: false
+  with_items:
+    - "eggs"
+    - "downloads"
+    - "configs"
+
+- name: Symlink tools dir into homedir.
+  action: file src=/vagrant/tools dest=/home/vagrant/tools state=link
+  sudo: false
+
+- name: Symlink correct tools buildout config file.
+  action: file src=/home/vagrant/tools/vm.cfg dest=/home/vagrant/tools/buildout.cfg state=link
+  sudo: false
+
+- name: Run tools/ dir's buildout.
+  action: shell python bootstrap.py && bin/buildout -vv && install_shell_scripts.sh
+  sudo: false
+  args:
+    chdir: /home/vagrant/tools
