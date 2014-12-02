@@ -17,6 +17,15 @@
   action: shell /tmp/tempvirtualenv/bin/dotfiles --sync --force
   sudo: false
 
+- name: Make sure my and vagrant's pub key is allowed.
+  action: authorized_key
+  args:
+    user: vagrant
+    key: "{{ item }}"
+  sudo: false
+  with_file:
+    - vagrant.pub
+    - /Users/reinout/.ssh/id_dsa.pub
 
 # Make sure the tools are installed.
 - name: Create /Users dir for a /Users/reinout symlink.
