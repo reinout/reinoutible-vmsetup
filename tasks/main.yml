@@ -42,6 +42,13 @@
     - "downloads"
     - "configs"
 
+- name: Add buildout default config file.
+  action: template
+  sudo: false
+  args:
+    src: buildout_default.cfg
+    dest: "/home/{{ ansible_ssh_user }}/.buildout/default.cfg"
+
 - name: Symlink tools dir into homedir.
   action: file src=/vagrant/tools dest=/home/vagrant/tools state=link
   sudo: false
