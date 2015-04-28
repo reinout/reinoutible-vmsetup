@@ -35,7 +35,7 @@
   action: file src=/home/vagrant dest=/Users/reinout state=link
 
 - name: Make sure the buildout cache dirs exist.
-  action: file dest=/home/vagrant/.buildout/{{ item }} state=directory
+  action: file dest=/vagrant/.buildout/{{ item }} state=directory
   sudo: false
   with_items:
     - "eggs"
